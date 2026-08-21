@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grey Global — Raw material for machine intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #EDEBE4;
+    --paper-2: #E2DFD4;
+    --ink: #17181A;
+    --graphite: #5B5D63;
+    --line: #C9C5B8;
+    --dark: #131315;
+    --dark-2: #1D1E21;
+    --dark-line: #35363b;
+    --signal: #3346FF;
+    --signal-ink: #ffffff;
+    --amber: #D98E2B;
+    --rec: #DD3E2C;
+    --font-display: 'Archivo', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color: inherit; text-decoration: none; }
+  ul{ list-style: none; }
+  button, input, select, textarea{ font-family: inherit; font-size: inherit; color: inherit; }
+
+  :focus-visible{ outline: 2px solid var(--signal); outline-offset: 3px; }
+
+  .wrap{
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 48px);
+  }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h1,h2,h3{
+    font-family: var(--font-display);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+    text-transform: uppercase;
+  }
+
+  .btn{
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 14px 22px;
+    border-radius: 2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  .btn:active{ transform: translateY(1px); }
+  .btn-primary{ background: var(--signal); color: #fff; }
+  .btn-primary:hover{ background: #263699; }
+  .btn-outline-dark{ border-color: rgba(255,255,255,0.35); color: #fff; }
+  .btn-outline-dark:hover{ border-color: #fff; background: rgba(255,255,255,0.08); }
+  .btn-outline-ink{ border-color: var(--ink); color: var(--ink); }
+  .btn-outline-ink:hover{ background: var(--ink); color: var(--paper); }
+
+  /* ---------- ticks / registration marks ---------- */
+  .ticked{ position: relative; }
+  .ticked::before, .ticked::after,
+  .ticked .tick-br, .ticked .tick-bl{ content:""; position:absolute; width:14px; height:14px; }
+  .ticked::before{ top:0; left:0; border-top:1px solid currentColor; border-left:1px solid currentColor; }
+  .ticked::after{ top:0; right:0; border-top:1px solid currentColor; border-right:1px solid currentColor; }
+  .ticked .tick-bl{ bottom:0; left:0; border-bottom:1px solid currentColor; border-left:1px solid currentColor; }
+  .ticked .tick-br{ bottom:0; right:0; border-bottom:1px solid currentColor; border-right:1px solid currentColor; }
+
+  /* ---------- header ---------- */
+  header{
+    position: sticky; top:0; z-index: 50;
+    background: rgba(19,19,21,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--dark-line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-block: 16px; color: #fff;
+  }
+  .logo{
+    font-family: var(--font-display); font-weight: 900; font-size: 18px;
+    letter-spacing: 0.02em; text-transform: uppercase; display:flex; align-items:center; gap:8px;
+  }
+  .logo .dot{ width:8px; height:8px; background: var(--signal); border-radius: 50%; display:inline-block; }
+  .nav-links{ display:flex; align-items:center; gap: 30px; font-family: var(--font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  .nav-links a{ opacity:.8; transition: opacity .15s ease; }
+  .nav-links a:hover{ opacity: 1; }
+  .nav-cta{ display:flex; align-items:center; gap:18px; }
+  .burger{ display:none; background:none; border:1px solid rgba(255,255,255,.35); padding:8px 10px; }
+  .burger span{ display:block; width:18px; height:2px; background:#fff; margin:3px 0; }
+  .mobile-menu{ display:none; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    background: var(--dark); color: #fff;
+    padding-top: clamp(48px, 8vw, 88px);
+    padding-bottom: clamp(40px, 6vw, 64px);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-inner{ color: rgba(255,255,255,.85); }
+  .rec-eyebrow{ color: var(--paper); margin-bottom: 26px; }
+  .rec-dot{ width:8px; height:8px; border-radius:50%; background: var(--rec); display:inline-block; animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+
+  .hero h1{
+    font-size: clamp(42px, 7.4vw, 92px);
+    color: #fff;
+    max-width: 14ch;
+  }
+  .hero-sub{
+    margin-top: 26px;
+    max-width: 46ch;
+    font-size: clamp(16px, 1.7vw, 18.5px);
+    color: rgba(255,255,255,.68);
+  }
+  .hero-ctas{ margin-top: 34px; display:flex; gap:14px; flex-wrap:wrap; }
+
+  .waveform-block{
+    margin-top: 56px; position: relative; color: rgba(255,255,255,.25);
+    border-top: 1px solid var(--dark-line);
+    padding-top: 28px;
+  }
+  .waveform{
+    height: 110px; display:flex; align-items:flex-end; gap: 3px;
+    overflow: hidden;
+  }
+  .waveform .bar{ flex: 1 1 auto; background: rgba(255,255,255,.16); min-width: 2px; border-radius: 1px; }
+  .waveform .bar.tag{ background: var(--signal); }
+  .waveform .bar.tag-amber{ background: var(--amber); }
+
+  .chip{
+    font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .03em;
+    border: 1px solid rgba(255,255,255,.3); padding: 5px 9px;
+    position: absolute; background: rgba(19,19,21,.75); backdrop-filter: blur(2px);
+    color: rgba(255,255,255,.85);
+  }
+  .chip::before, .chip::after{ content:""; position:absolute; width:6px; height:6px; }
+  .chip::before{ top:-1px; left:-1px; border-top:1px solid var(--signal); border-left:1px solid var(--signal); }
+  .chip::after{ bottom:-1px; right:-1px; border-bottom:1px solid var(--signal); border-right:1px solid var(--signal); }
+  .chip-1{ top: -8px; left: 6%; }
+  .chip-2{ top: 18px; left: 42%; }
+  .chip-3{ top: -4px; right: 18%; }
+  .chip-4{ top: 46px; right: 2%; }
+
+  /* ---------- manifest strip ---------- */
+  .manifest{
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--line);
+    padding-block: 16px;
+  }
+  .manifest .wrap{
+    display:flex; flex-wrap:wrap; gap: 10px 28px;
+    font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .03em;
+    color: var(--graphite); text-transform: uppercase;
+  }
+  .manifest b{ color: var(--ink); font-weight: 600; }
+
+  /* ---------- generic section ---------- */
+  section{ padding-block: clamp(56px, 9vw, 108px); }
+  .section-head{ margin-bottom: 44px; max-width: 62ch; }
+  .section-head .eyebrow{ color: var(--signal); margin-bottom: 14px; }
+  .section-head h2{ font-size: clamp(28px, 4vw, 42px); }
+  .section-head p{ margin-top: 16px; color: var(--graphite); font-size: 16.5px; max-width: 56ch; }
+  .dark .section-head .eyebrow{ color: var(--amber); }
+  .dark .section-head p{ color: rgba(255,255,255,.6); }
+
+  section.dark{ background: var(--dark); color: #fff; }
+  section.paper-2{ background: var(--paper-2); }
+
+  /* ---------- collect cards ---------- */
+  .collect-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+  .record-card{
+    border: 1px solid var(--line); padding: 26px 24px 24px; position:relative; color: var(--ink);
+  }
+  .record-card .rc-top{ display:flex; justify-content:space-between; align-items:baseline; font-family: var(--font-mono); font-size:11.5px; text-transform:uppercase; color: var(--graphite); letter-spacing:.04em; margin-bottom: 22px;}
+  .record-card h3{ font-size: 22px; margin-bottom: 12px; }
+  .record-card p{ color: var(--graphite); font-size: 15px; margin-bottom: 18px; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .tag{ font-family: var(--font-mono); font-size: 11px; letter-spacing:.03em; text-transform:uppercase; border:1px solid var(--line); padding:4px 8px; color: var(--graphite); }
+
+  /* ---------- catalog ---------- */
+  .catalog-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .ds-card{ background: var(--paper-2); padding: 24px; display:flex; flex-direction:column; gap: 14px; }
+  .ds-id{ font-family: var(--font-mono); font-size: 11.5px; color: var(--signal); letter-spacing:.03em; }
+  .ds-card h3{ font-family: var(--font-body); font-weight:600; text-transform:none; font-size: 17px; letter-spacing:0; line-height:1.3; }
+  .ds-meta{ font-family: var(--font-mono); font-size: 12px; color: var(--graphite); display:flex; flex-direction:column; gap:4px; }
+  .ds-foot{ margin-top:auto; display:flex; justify-content:space-between; align-items:center; padding-top: 10px; border-top: 1px dashed var(--line); }
+  .ds-link{ font-family: var(--font-mono); font-size: 12.5px; text-transform:uppercase; color: var(--signal); }
+  .ds-link:hover{ text-decoration: underline; }
+
+  /* ---------- process ---------- */
+  .process-list{ display:grid; grid-template-columns: repeat(5,1fr); gap: 0; border-top:1px solid var(--line); }
+  .step{ padding: 22px 18px 0 0; border-right: 1px solid var(--line); }
+  .step:last-child{ border-right:none; }
+  .step .step-code{ font-family: var(--font-mono); font-size:12px; color: var(--signal); margin-bottom: 14px; }
+  .step h3{ font-family: var(--font-body); font-weight:700; text-transform:none; font-size:16px; letter-spacing:0; margin-bottom:10px; }
+  .step p{ font-size: 13.8px; color: var(--graphite); }
+
+  /* ---------- languages ---------- */
+  .lang-marquee{ overflow:hidden; border-top:1px solid var(--dark-line); border-bottom:1px solid var(--dark-line); padding-block: 22px; }
+  .lang-track{ display:flex; gap: 14px; width: max-content; animation: scroll 46s linear infinite; }
+  .lang-track span{ font-family: var(--font-mono); font-size: 14px; letter-spacing:.02em; color: rgba(255,255,255,.55); white-space:nowrap; }
+  .lang-track span b{ color: #fff; font-weight:600; }
+  @keyframes scroll{ from{ transform: translateX(0); } to{ transform: translateX(-50%); } }
+  .lang-note{ margin-top: 22px; font-family: var(--font-mono); font-size: 13px; color: rgba(255,255,255,.55); }
+  @media (prefers-reduced-motion: reduce){ .lang-track{ animation: none; } }
+
+  /* ---------- quality ---------- */
+  .quality-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap: 22px; }
+  .q-card{ border-top: 2px solid var(--ink); padding-top: 16px; }
+  .q-card h3{ font-family: var(--font-body); font-weight:700; text-transform:none; font-size:16px; margin-bottom:10px; letter-spacing:0; }
+  .q-card p{ font-size: 14px; color: var(--graphite); }
+
+  /* ---------- industries ---------- */
+  .industry-row{ display:flex; flex-wrap:wrap; gap: 12px; }
+  .industry-row .tag{ font-size: 13px; padding: 9px 16px; }
+
+  /* ---------- contact ---------- */
+  .contact-grid{ display:grid; grid-template-columns: 1fr 1.15fr; gap: 64px; align-items:start; }
+  .contact-grid h2{ font-size: clamp(30px,4.4vw,46px); color:#fff; max-width: 12ch; }
+  .contact-grid > div:first-child p{ margin-top:18px; color: rgba(255,255,255,.6); max-width: 40ch; }
+  .contact-meta{ margin-top: 34px; font-family: var(--font-mono); font-size: 13px; color: rgba(255,255,255,.55); display:flex; flex-direction:column; gap:8px; }
+  .contact-meta a{ color: var(--amber); }
+
+  form{ display:flex; flex-direction:column; gap: 20px; }
+  .form-row{ display:grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .field label{ display:block; font-family: var(--font-mono); font-size: 11.5px; text-transform:uppercase; letter-spacing:.05em; color: rgba(255,255,255,.5); margin-bottom: 8px; }
+  .field input, .field select, .field textarea{
+    width:100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,.3);
+    padding: 10px 2px; color: #fff;
+  }
+  .field select option{ color: #000; }
+  .field input::placeholder, .field textarea::placeholder{ color: rgba(255,255,255,.3); }
+  .field input:focus, .field select:focus, .field textarea:focus{ border-color: var(--signal); }
+  .field textarea{ resize: vertical; min-height: 90px; }
+  .form-foot{ display:flex; align-items:center; gap: 18px; margin-top: 6px; }
+  .form-note{ font-family: var(--font-mono); font-size:12px; color: rgba(255,255,255,.45); }
+  .success-msg{ display:none; font-family: var(--font-mono); font-size: 13px; color: var(--amber); margin-top: 8px; }
+  .success-msg.show{ display:block; }
+
+  /* ---------- footer ---------- */
+  footer{ background: var(--dark); border-top: 1px solid var(--dark-line); padding-block: 30px; }
+  footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap: 14px; }
+  footer .logo{ color:#fff; }
+  .foot-links{ display:flex; gap:22px; font-family: var(--font-mono); font-size:12px; text-transform:uppercase; color: rgba(255,255,255,.5); }
+  .foot-copy{ font-family: var(--font-mono); font-size:12px; color: rgba(255,255,255,.35); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 980px){
+    .collect-grid{ grid-template-columns: 1fr; }
+    .catalog-grid{ grid-template-columns: repeat(2,1fr); }
+    .process-list{ grid-template-columns: repeat(2,1fr); }
+    .step{ border-right:none; border-bottom: 1px solid var(--line); padding-bottom: 22px; margin-bottom: 4px; }
+    .quality-grid{ grid-template-columns: repeat(2,1fr); }
+    .contact-grid{ grid-template-columns: 1fr; gap: 40px; }
+    .form-row{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px){
+    .nav-links, .nav-cta .btn-outline-dark{ display:none; }
+    .burger{ display:block; }
+    .mobile-menu.open{ display:flex; }
+    .mobile-menu{ flex-direction:column; gap: 2px; background: var(--dark); border-top:1px solid var(--dark-line); padding: 14px clamp(20px,5vw,48px) 20px; }
+    .mobile-menu a{ padding: 12px 0; font-family: var(--font-mono); font-size:13px; text-transform:uppercase; color:#fff; border-bottom:1px solid var(--dark-line); }
+    .catalog-grid{ grid-template-columns: 1fr; }
+    .manifest .wrap{ font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav wrap">
+    <a href="#top" class="logo"><span class="dot"></span>Grey Global</a>
+    <div class="nav-links">
+      <a href="#catalog">Catalog</a>
+      <a href="#process">Custom orders</a>
+      <a href="#languages">Languages</a>
+      <a href="#quality">Quality</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-outline-dark">Request a dataset</a>
+    </div>
+    <button class="burger" aria-label="Toggle menu" aria-expanded="false" id="burgerBtn">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#catalog">Catalog</a>
+    <a href="#process">Custom orders</a>
+    <a href="#languages">Languages</a>
+    <a href="#quality">Quality</a>
+    <a href="#contact">Request a dataset</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="eyebrow rec-eyebrow"><span class="rec-dot"></span> REC — LIVE COLLECTION IN 63 LANGUAGES</div>
+      <h1>Raw material<br>for machine<br>intelligence</h1>
+      <p class="hero-sub">Grey Global records, sources, and labels audio, image, and video data for AI teams — off the shelf or built to your spec, in any language your model needs to learn.</p>
+      <div class="hero-ctas">
+        <a href="#catalog" class="btn btn-primary">Browse the catalog</a>
+        <a href="#contact" class="btn btn-outline-dark">Start a custom order</a>
+      </div>
+
+      <div class="waveform-block">
+        <div class="chip chip-1">AR-EG · 40H · VERIFIED</div>
+        <div class="chip chip-2">JA · SPONTANEOUS</div>
+        <div class="chip chip-3">SW · NEW</div>
+        <div class="chip chip-4">PT-BR · TAGGED</div>
+        <div class="waveform" id="waveform"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANIFEST STRIP -->
+  <div class="manifest">
+    <div class="wrap">
+      <span>LANGUAGES <b>63</b></span>
+      <span>HOURS RECORDED <b>210,000+</b></span>
+      <span>IMAGES TAGGED <b>4.2M</b></span>
+      <span>ACTIVE COUNTRIES <b>41</b></span>
+      <span>CONTRIBUTORS <b>38,000+</b></span>
+    </div>
+  </div>
+
+  <!-- WHAT WE COLLECT -->
+  <section id="collect">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Modalities</div>
+        <h2>Three kinds of raw material</h2>
+        <p>Every dataset starts as audio, image, or video — captured to your protocol, then reviewed by a native-language team before it ships.</p>
+      </div>
+      <div class="collect-grid">
+        <div class="record-card">
+          <div class="rc-top"><span>REC-A</span><span>id: audio</span></div>
+          <h3>Audio / Voice</h3>
+          <p>Scripted and spontaneous speech, call-center dialogue, wake-word repetitions, accented and code-switched recordings.</p>
+          <div class="tag-row">
+            <span class="tag">ASR</span><span class="tag">TTS</span><span class="tag">Wake-word</span><span class="tag">Diarization</span>
+          </div>
+        </div>
+        <div class="record-card">
+          <div class="rc-top"><span>REC-I</span><span>id: image</span></div>
+          <h3>Image</h3>
+          <p>Photographs, scene captures, and document scans, shot or sourced to your bounding-box or segmentation spec.</p>
+          <div class="tag-row">
+            <span class="tag">Detection</span><span class="tag">OCR</span><span class="tag">Segmentation</span><span class="tag">Classification</span>
+          </div>
+        </div>
+        <div class="record-card">
+          <div class="rc-top"><span>REC-V</span><span>id: video</span></div>
+          <h3>Video</h3>
+          <p>Scripted scenarios, gesture and action clips, ambient footage, and multi-camera capture for motion models.</p>
+          <div class="tag-row">
+            <span class="tag">Action</span><span class="tag">Gesture</span><span class="tag">Multi-angle</span><span class="tag">Ambient</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATALOG -->
+  <section id="catalog" class="paper-2">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Ready-made</div>
+        <h2>From the catalog</h2>
+        <p>A running set of pre-collected, pre-reviewed datasets available now. Every entry is a real record — request access and we confirm licensing terms with you directly.</p>
+      </div>
+      <div class="catalog-grid">
+        <div class="ds-card">
+          <div class="ds-id">DS-0142</div>
+          <h3>Conversational Arabic (Egyptian) Speech</h3>
+          <div class="ds-meta"><span>40 HRS · 16KHZ WAV</span><span>TRANSCRIBED + VERIFIED</span></div>
+          <div class="ds-foot"><span class="tag">Audio</span><a href="#contact" class="ds-link">Request →</a></div>
+        </div>
+        <div class="ds-card">
+          <div class="ds-id">DS-0098</div>
+          <h3>Everyday Kitchen Objects</h3>
+          <div class="ds-meta"><span>12,000 IMAGES · COCO FORMAT</span><span>BOUNDING BOXES</span></div>
+          <div class="ds-foot"><span class="tag">Image</span><a href="#contact" class="ds-link">Request →</a></div>
+        </div>
+        <div class="ds-card">
+          <div class="ds-id">DS-0231</div>
+          <h3>Retail Storefront Video</h3>
+          <div class="ds-meta"><span>300 CLIPS · 1080P</span><span>ACTION-LABELED</span></div>
+          <div class="ds-foot"><span class="tag">Video</span><a href="#contact" class="ds-link">Request →</a></div>
+        </div>
+        <div class="ds-card">
+          <div class="ds-id">DS-0176</div>
+          <h3>Swahili Read &amp; Spontaneous Speech</h3>
+          <div class="ds-meta"><span>65 HRS · WAV</span><span>VERIFIED TRANSCRIPTS</span></div>
+          <div class="ds-foot"><span class="tag">Audio</span><a href="#contact" class="ds-link">Request →</a></div>
+        </div>
+        <div class="ds-card">
+          <div class="ds-id">DS-0304</div>
+          <h3>Hand Gesture Video Set</h3>
+          <div class="ds-meta"><span>8,500 CLIPS · MP4</span><span>LANDMARK-ANNOTATED</span></div>
+          <div class="ds-foot"><span class="tag">Video</span><a href="#contact" class="ds-link">Request →</a></div>
+        </div>
+        <div class="ds-card">
+          <div class="ds-id">DS-0059</div>
+          <h3>Multilingual Form Scans</h3>
+          <div class="ds-meta"><span>25,000 PAGES · 14 LANGUAGES</span><span>OCR-READY</span></div>
+          <div class="ds-foot"><span class="tag">Image</span><a href="#contact" class="ds-link">Request →</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Custom orders</div>
+        <h2>Built to your spec, in five steps</h2>
+        <p>Need something the catalog doesn't have yet? Custom collection follows the same pipeline every time, in any language, from a single locale to a global rollout.</p>
+      </div>
+      <div class="process-list">
+        <div class="step"><div class="step-code">STEP / 01</div><h3>Spec</h3><p>You define language, modality, volume, and format. We scope contributors and timeline.</p></div>
+        <div class="step"><div class="step-code">STEP / 02</div><h3>Recruit</h3><p>We source native contributors in the target locale, screened and consented.</p></div>
+        <div class="step"><div class="step-code">STEP / 03</div><h3>Capture</h3><p>Recording, photography, or filming happens in-field or in-studio, to your protocol.</p></div>
+        <div class="step"><div class="step-code">STEP / 04</div><h3>Review</h3><p>Native-language QA, transcription, and labeling pass before anything ships.</p></div>
+        <div class="step"><div class="step-code">STEP / 05</div><h3>Deliver</h3><p>Data lands in your format and schema, with an audit trail for every file.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGES -->
+  <section id="languages" class="dark">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Global reach</div>
+        <h2>Wherever your users speak, we can record it</h2>
+        <p>63 languages and locales are live today. New ones are onboarded per request, typically within two to three weeks.</p>
+      </div>
+    </div>
+    <div class="lang-marquee">
+      <div class="lang-track" id="langTrack">
+        <!-- duplicated via JS for seamless loop -->
+      </div>
+    </div>
+    <div class="wrap"><div class="lang-note">Don't see your target locale? Ask — sourcing a new one is a standard custom order.</div></div>
+  </section>
+
+  <!-- QUALITY -->
+  <section id="quality">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Quality &amp; compliance</div>
+        <h2>Every file is traceable</h2>
+        <p>Trust matters more than volume. Here's what stands behind every dataset that leaves Grey Global.</p>
+      </div>
+      <div class="quality-grid">
+        <div class="q-card"><h3>Consent-first sourcing</h3><p>Every contributor signs a locale-appropriate consent and usage agreement before recording starts.</p></div>
+        <div class="q-card"><h3>Native review</h3><p>Transcripts and labels are checked by reviewers fluent in the source language, never machine-translated.</p></div>
+        <div class="q-card"><h3>Secure handling</h3><p>Encrypted transfer and storage, with access limited to your named project team.</p></div>
+        <div class="q-card"><h3>Full audit trail</h3><p>Every file is traceable to a contributor ID, capture session, and QA pass.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <section class="paper-2">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Used for</div>
+        <h2>Built for the models you're training</h2>
+      </div>
+      <div class="industry-row">
+        <span class="tag">Speech recognition</span>
+        <span class="tag">Computer vision</span>
+        <span class="tag">Conversational AI &amp; LLMs</span>
+        <span class="tag">Document intelligence</span>
+        <span class="tag">Autonomous systems</span>
+        <span class="tag">Biometrics</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="dark">
+    <div class="wrap contact-grid">
+      <div>
+        <h2>Tell us what your model needs to learn.</h2>
+        <p>Send the shape of the project — modality, language, volume — and we'll come back with scope and timeline.</p>
+        <div class="contact-meta">
+          <span>EMAIL — ceo@grey-global.com</span>
+          <span>RESPONSE TIME — within one business day</span>
+        </div>
+      </div>
+      <form id="requestForm">
+        <div class="form-row">
+          <div class="field"><label for="company">Company</label><input id="company" type="text" placeholder="Company name" required></div>
+          <div class="field"><label for="email">Work email</label><input id="email" type="email" placeholder="you@company.com" required></div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="dtype">Data type</label>
+            <select id="dtype">
+              <option>Audio / Voice</option>
+              <option>Image</option>
+              <option>Video</option>
+              <option>Mixed</option>
+            </select>
+          </div>
+          <div class="field"><label for="langs">Languages needed</label><input id="langs" type="text" placeholder="e.g. Arabic (Egyptian), Japanese"></div>
+        </div>
+        <div class="field"><label for="volume">Estimated volume</label><input id="volume" type="text" placeholder="e.g. 50 hours of speech, 10,000 images"></div>
+        <div class="field"><label for="details">Project details</label><textarea id="details" placeholder="What are you building, and what does the data need to look like?"></textarea></div>
+        <div class="form-foot">
+          <button type="submit" class="btn btn-primary">Send request</button>
+          <span class="form-note">No commitment — this starts a scoping conversation.</span>
+        </div>
+        <div class="success-msg" id="successMsg">Request received. We'll be in touch within one business day.</div>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <a href="#top" class="logo"><span class="dot"></span>Grey Global</a>
+    <div class="foot-links">
+      <a href="#catalog">Catalog</a>
+      <a href="#process">Custom orders</a>
+      <a href="#quality">Quality</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="foot-copy">© 2026 Grey Global. Data collected with consent, everywhere.</div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu
+  const burgerBtn = document.getElementById('burgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  burgerBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    burgerBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    burgerBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  // waveform generation
+  const waveform = document.getElementById('waveform');
+  const BAR_COUNT = 130;
+  let seed = 42;
+  function rand(){ seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; }
+  for (let i = 0; i < BAR_COUNT; i++){
+    const bar = document.createElement('div');
+    const h = 8 + rand() * 92;
+    bar.className = 'bar';
+    if (i % 17 === 3) bar.classList.add('tag');
+    else if (i % 23 === 9) bar.classList.add('tag-amber');
+    bar.style.height = h + '%';
+    waveform.appendChild(bar);
+  }
+
+  // language marquee
+  const languages = ['AR — Arabic','EN — English','FR — French','SW — Swahili','HI — Hindi','ZH — Mandarin','JA — Japanese','KO — Korean','PT — Portuguese','ES — Spanish','DE — German','TR — Turkish','VI — Vietnamese','TH — Thai','UR — Urdu','AM — Amharic','FA — Persian','BN — Bengali','ID — Indonesian','PL — Polish'];
+  const track = document.getElementById('langTrack');
+  function buildTrack(){
+    let html = '';
+    for (let rep = 0; rep < 2; rep++){
+      languages.forEach(l => {
+        const [code, name] = l.split(' — ');
+        html += `<span><b>${code}</b> ${name}</span>`;
+      });
+    }
+    track.innerHTML = html;
+  }
+  buildTrack();
+
+  // contact form (front-end only)
+  const form = document.getElementById('requestForm');
+  const successMsg = document.getElementById('successMsg');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    successMsg.classList.add('show');
+    form.reset();
+  });
+</script>
+
+</body>
+</html>
