@@ -244,6 +244,14 @@
   .q-card h3{ font-family: var(--font-body); font-weight:700; text-transform:none; font-size:16px; margin-bottom:10px; letter-spacing:0; }
   .q-card p{ font-size: 14px; color: var(--graphite); }
 
+  /* ---------- certifications ---------- */
+  .cert-grid{ display:grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
+  .cert-card{ padding: 22px 18px; text-align:center; color: rgba(255,255,255,.85); }
+  .cert-mark{ width:40px; height:40px; margin: 0 auto 16px; border:1px solid var(--dark-line); display:flex; align-items:center; justify-content:center; color: var(--amber); }
+  .cert-card h3{ font-family: var(--font-mono); font-weight:600; text-transform:uppercase; font-size:13.5px; letter-spacing:.04em; margin-bottom:8px; color:#fff; }
+  .cert-card p{ font-size: 12.5px; color: rgba(255,255,255,.55); }
+  .cert-note{ margin-top: 30px; font-family: var(--font-mono); font-size: 12.5px; color: rgba(255,255,255,.45); }
+
   /* ---------- industries ---------- */
   .industry-row{ display:flex; flex-wrap:wrap; gap: 12px; }
   .industry-row .tag{ font-size: 13px; padding: 9px 16px; }
@@ -270,6 +278,9 @@
   .form-note{ font-family: var(--font-mono); font-size:12px; color: rgba(255,255,255,.45); }
   .success-msg{ display:none; font-family: var(--font-mono); font-size: 13px; color: var(--amber); margin-top: 8px; }
   .success-msg.show{ display:block; }
+  .error-msg{ display:none; font-family: var(--font-mono); font-size: 13px; color: var(--rec); margin-top: 8px; }
+  .error-msg.show{ display:block; }
+  .btn-primary:disabled{ opacity: .6; cursor: not-allowed; }
 
   /* ---------- footer ---------- */
   footer{ background: var(--dark); border-top: 1px solid var(--dark-line); padding-block: 30px; }
@@ -285,6 +296,7 @@
     .process-list{ grid-template-columns: repeat(2,1fr); }
     .step{ border-right:none; border-bottom: 1px solid var(--line); padding-bottom: 22px; margin-bottom: 4px; }
     .quality-grid{ grid-template-columns: repeat(2,1fr); }
+    .cert-grid{ grid-template-columns: repeat(2,1fr); }
     .contact-grid{ grid-template-columns: 1fr; gap: 40px; }
     .form-row{ grid-template-columns: 1fr; }
   }
@@ -516,6 +528,44 @@
     </div>
   </section>
 
+  <!-- CERTIFICATIONS -->
+  <section id="certifications" class="dark">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Certifications</div>
+        <h2>Standards we operate by</h2>
+        <p>Independently audited, renewed on schedule. Documentation available on request under NDA.</p>
+      </div>
+      <div class="cert-grid">
+        <div class="cert-card ticked">
+          <div class="tick-bl"></div><div class="tick-br"></div>
+          <div class="cert-mark">✓</div>
+          <h3>ISO/IEC 27001</h3>
+          <p>Information security management</p>
+        </div>
+        <div class="cert-card ticked">
+          <div class="tick-bl"></div><div class="tick-br"></div>
+          <div class="cert-mark">✓</div>
+          <h3>GDPR Compliant</h3>
+          <p>EU data protection &amp; processing</p>
+        </div>
+        <div class="cert-card ticked">
+          <div class="tick-bl"></div><div class="tick-br"></div>
+          <div class="cert-mark">✓</div>
+          <h3>SOC 2 Type II</h3>
+          <p>Security, availability &amp; confidentiality</p>
+        </div>
+        <div class="cert-card ticked">
+          <div class="tick-bl"></div><div class="tick-br"></div>
+          <div class="cert-mark">✓</div>
+          <h3>ISO 9001:2015</h3>
+          <p>Quality management systems</p>
+        </div>
+      </div>
+      <div class="cert-note">Placeholder certifications — replace with the ones your company actually holds before publishing.</div>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section id="contact" class="dark">
     <div class="wrap contact-grid">
@@ -527,30 +577,32 @@
           <span>RESPONSE TIME — within one business day</span>
         </div>
       </div>
-      <form id="requestForm">
+      <form id="requestForm" action="https://formspree.io/f/myegoozn" method="POST">
         <div class="form-row">
-          <div class="field"><label for="company">Company</label><input id="company" type="text" placeholder="Company name" required></div>
-          <div class="field"><label for="email">Work email</label><input id="email" type="email" placeholder="you@company.com" required></div>
+          <div class="field"><label for="company">Company</label><input id="company" name="company" type="text" placeholder="Company name" required></div>
+          <div class="field"><label for="email">Work email</label><input id="email" name="email" type="email" placeholder="you@company.com" required></div>
         </div>
         <div class="form-row">
           <div class="field">
             <label for="dtype">Data type</label>
-            <select id="dtype">
+            <select id="dtype" name="data_type">
               <option>Audio / Voice</option>
               <option>Image</option>
               <option>Video</option>
               <option>Mixed</option>
             </select>
           </div>
-          <div class="field"><label for="langs">Languages needed</label><input id="langs" type="text" placeholder="e.g. Arabic (Egyptian), Japanese"></div>
+          <div class="field"><label for="langs">Languages needed</label><input id="langs" name="languages" type="text" placeholder="e.g. Arabic (Egyptian), Japanese"></div>
         </div>
-        <div class="field"><label for="volume">Estimated volume</label><input id="volume" type="text" placeholder="e.g. 50 hours of speech, 10,000 images"></div>
-        <div class="field"><label for="details">Project details</label><textarea id="details" placeholder="What are you building, and what does the data need to look like?"></textarea></div>
+        <div class="field"><label for="volume">Estimated volume</label><input id="volume" name="volume" type="text" placeholder="e.g. 50 hours of speech, 10,000 images"></div>
+        <div class="field"><label for="details">Project details</label><textarea id="details" name="details" placeholder="What are you building, and what does the data need to look like?"></textarea></div>
+        <input type="hidden" name="_subject" value="New data request — Grey Global">
         <div class="form-foot">
-          <button type="submit" class="btn btn-primary">Send request</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Send request</button>
           <span class="form-note">No commitment — this starts a scoping conversation.</span>
         </div>
         <div class="success-msg" id="successMsg">Request received. We'll be in touch within one business day.</div>
+        <div class="error-msg" id="errorMsg">Something went wrong. Please try again or email us directly.</div>
       </form>
     </div>
   </section>
@@ -613,13 +665,39 @@
   }
   buildTrack();
 
-  // contact form (front-end only)
+  // contact form (submits to Formspree)
   const form = document.getElementById('requestForm');
   const successMsg = document.getElementById('successMsg');
-  form.addEventListener('submit', (e) => {
+  const errorMsg = document.getElementById('errorMsg');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    successMsg.classList.add('show');
-    form.reset();
+    successMsg.classList.remove('show');
+    errorMsg.classList.remove('show');
+    submitBtn.disabled = true;
+    const originalLabel = submitBtn.textContent;
+    submitBtn.textContent = 'Sending…';
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        successMsg.classList.add('show');
+        form.reset();
+      } else {
+        errorMsg.classList.add('show');
+      }
+    } catch (err) {
+      errorMsg.classList.add('show');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalLabel;
+    }
   });
 </script>
 
