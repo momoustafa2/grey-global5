@@ -1,0 +1,5 @@
+{
+  "name": "grey-global-site",
+  "private": true,
+  "scripts": { "build": "node build.js" }
+}
