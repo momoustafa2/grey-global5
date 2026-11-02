@@ -7,6 +7,7 @@ Languages are read from site.js (LD and RD), so to add a language: add it there 
 import re, unicodedata, pathlib, html
 
 ROOT = pathlib.Path(__file__).resolve().parent
+DOMAIN = 'https://grey-global.com'
 JS = (ROOT / 'site.js').read_text(encoding='utf-8')
 
 
@@ -37,10 +38,10 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="
          '<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">')
 
 
-def page(title, desc, body):
+def page(title, desc, body, path=''):
     return (f'<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>{html.escape(title)} — Grey Global</title><meta name="description" content="{html.escape(desc, quote=True)}">'
-            f'<link rel="icon" href="/favicon.svg">{FONTS}<link rel="stylesheet" href="/styles.css"></head>'
+            f'<link rel="canonical" href="{DOMAIN}{path}"><link rel="icon" href="/favicon.svg">{FONTS}<link rel="stylesheet" href="/styles.css"></head>'
             f'<body><div id="hdr"></div><main>{body}</main><div id="ftr"></div><script src="/site.js"></script></body></html>')
 
 
@@ -103,7 +104,7 @@ def lang_page(l, kind, idx, group):
             cta(f'Need more {n} data, or a variety we do not list?', '/custom-orders', 'Start a custom order'))
     title = f'{n} speech data'
     desc = f'{n} conversational and free speech data: 5,000+ hours from native speakers, transcribed and labeled. Request access.'
-    return SL(n), page(title, desc, body)
+    return SL(n), page(title, desc, body, f'/languages/{SL(n)}')
 
 
 (ROOT / 'languages').mkdir(exist_ok=True)
@@ -181,6 +182,15 @@ for d in DS:
             f'<div class="grid3">{others}</div></div></section>')
     body = hero + main + mid + more + cta(f'Need something like {d["t"].lower()} built to spec?', '/custom-orders', 'Start a custom order')
     (ROOT / 'datasets' / f'{d["slug"]}.html').write_text(
-        page(d['t'], f'{d["blurb"]} Request access from Grey Global.', body), encoding='utf-8')
+        page(d['t'], f'{d["blurb"]} Request access from Grey Global.', body, f'/datasets/{d["slug"]}'), encoding='utf-8')
+
+# ---------- sitemap + robots ----------
+urls = ['/', '/catalog', '/custom-orders', '/languages', '/quality', '/contact']
+urls += [f'/languages/{SL(l["n"])}' for l in CORE + RARE]
+urls += [f'/datasets/{d["slug"]}' for d in DS]
+sm = ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+      + ''.join(f'<url><loc>{DOMAIN}{u if u != "/" else "/"}</loc></url>\n' for u in urls) + '</urlset>\n')
+(ROOT / 'sitemap.xml').write_text(sm, encoding='utf-8')
+(ROOT / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {DOMAIN}/sitemap.xml\n', encoding='utf-8')
 
 print('languages:', len(CORE), 'core +', len(RARE), 'rare |', 'datasets:', len(DS))
