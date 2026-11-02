@@ -110,3 +110,4 @@ footer{background:var(--dark);color:#fff;border-top:1px solid var(--dline);paddi
 @media(max-width:720px){.grid2{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.scan,.blink,.fc,.wave b,.hero::before{animation:none}}
 .tabs{display:flex;gap:10px;margin-bottom:22px}.tabs button{font:13px var(--fm);padding:9px 18px;border:1px solid var(--ink);background:none;cursor:pointer}.tabs button.on,.tabs button:hover{background:var(--ink);color:var(--paper)}
+.jump{position:sticky;top:58px;z-index:40;background:var(--paper);border-bottom:1px solid var(--line)}.jump .wrap{display:flex;gap:28px;overflow-x:auto}.jump a{font:13.5px var(--fm);padding:15px 0;white-space:nowrap;color:var(--grey);border-bottom:2px solid transparent}.jump a:hover{color:var(--ink);border-color:var(--sig)}section[id]{scroll-margin-top:110px}
